@@ -6,4 +6,5 @@ module fxgl.spaceinvader {
 
     opens fxgl.spaceinvader to javafx.fxml;
     exports fxgl.spaceinvader;
+    exports fxgl.spaceinvader.component to com.almasb.fxgl.core;
 }
