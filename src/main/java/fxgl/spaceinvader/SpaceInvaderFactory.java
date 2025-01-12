@@ -11,10 +11,7 @@ import com.almasb.fxgl.entity.components.IrremovableComponent;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.entity.components.TimeComponent;
-import fxgl.spaceinvader.component.EnemyComponent;
-import fxgl.spaceinvader.component.InvincibleComponent;
-import fxgl.spaceinvader.component.OwnerComponent;
-import fxgl.spaceinvader.component.PlayerComponent;
+import fxgl.spaceinvader.component.*;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -61,15 +58,15 @@ public class SpaceInvaderFactory implements EntityFactory {
     @Spawns("Bullet")
     public Entity newBullet(SpawnData data){
         Entity owner = data.get("owner");
-        System.out.println(owner);
         return FXGL.entityBuilder()
                 .type(SpaceInvaderType.BULLET)
                 .at(owner.getCenter().add(-3,18))
-                .viewWithBBox(new Rectangle(5,10,Color.RED))
-                .collidable()
+                .viewWithBBox(new Rectangle(5,13,Color.RED))
                 .with(new OwnerComponent(owner.getType()))
-                .with(new ProjectileComponent(new Point2D(0,1),600).allowRotation(false))
+                .with(new BulletComponent(300))
                 .with(new OffscreenCleanComponent())
+                .collidable()
+
                 .with("dead",false)
                 .build();
     }

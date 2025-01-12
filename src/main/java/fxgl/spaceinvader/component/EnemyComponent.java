@@ -42,6 +42,7 @@ public class EnemyComponent extends Component {
     }
 
     protected void shoot() {
+
         spawn("Bullet",new SpawnData(0,0).put("owner",getEntity()));
     }
 

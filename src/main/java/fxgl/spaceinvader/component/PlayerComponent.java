@@ -55,7 +55,6 @@ public class PlayerComponent extends Component {
 
         canShoot = false;
         lastTimeShot = getGameTimer().getNow();
-
         spawn("Bullet", new SpawnData(0, 0).put("owner", getEntity()));
     }
 
