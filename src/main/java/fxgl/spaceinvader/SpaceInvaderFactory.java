@@ -48,9 +48,9 @@ public class SpaceInvaderFactory implements EntityFactory {
         return entityBuilder(data)
                 .type(SpaceInvaderType.ENEMY)
                 .viewWithBBox(new Rectangle(25,25,Color.GREEN))
-                .collidable()
+                .with(new CollidableComponent(true),new HealthIntComponent(2),new TimeComponent(1))
                 .with(new InvincibleComponent())
-                .with(new EnemyComponent())
+                .with(new EnemyComponent(),new EffectComponent())
                 .build();
     }
 

@@ -51,6 +51,7 @@ public class SpaceInvaderApp extends GameApplication {
     protected void initGame() {
         FXGL.getGameWorld().addEntityFactory(new SpaceInvaderFactory());
         spawnBackground();
+        FXGL.setLevelFromMap("level1.tmx");
         spawnPlayer();
         spawnEnemies();
     }
