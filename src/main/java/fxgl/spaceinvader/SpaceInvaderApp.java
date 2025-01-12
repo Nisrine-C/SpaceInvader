@@ -10,6 +10,7 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.component.Component;
+import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
 import com.almasb.fxgl.input.Input;
 import fxgl.spaceinvader.collision.BulletEnemyHandler;
 import fxgl.spaceinvader.collision.BulletPlayerHandler;
@@ -51,7 +52,14 @@ public class SpaceInvaderApp extends GameApplication {
     protected void initGame() {
         FXGL.getGameWorld().addEntityFactory(new SpaceInvaderFactory());
         spawnBackground();
-        FXGL.setLevelFromMap("level1.tmx");
+
+        try {
+            FXGL.setLevelFromMap("./fxgl/spaceinvader/assets/levels/level1.tmx");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error loading level: " + e.getMessage());
+        }
+        //FXGL.setLevelFromMap("level1.tmx");
         spawnPlayer();
         spawnEnemies();
     }
