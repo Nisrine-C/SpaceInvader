@@ -10,8 +10,10 @@ import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.component.Component;
+import com.almasb.fxgl.entity.components.CollidableComponent;
 import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
 import com.almasb.fxgl.input.Input;
+import com.almasb.fxgl.texture.Texture;
 import fxgl.spaceinvader.collision.BulletEnemyHandler;
 import fxgl.spaceinvader.collision.BulletPlayerHandler;
 import fxgl.spaceinvader.component.PlayerComponent;
@@ -21,6 +23,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Arrays;
@@ -54,7 +57,23 @@ public class SpaceInvaderApp extends GameApplication {
         spawnBackground();
 
         try {
-            FXGL.setLevelFromMap("./fxgl/spaceinvader/assets/levels/level1.tmx");
+
+
+            Texture texture= FXGL.texture("../fxgl/spaceinvader/assets/textures/player.png");
+            //FXGL.setLevelFromMap("level1.tmx");
+            System.out.println(texture);
+            Entity entity = entityBuilder()
+                    .from(new SpawnData(50,50))
+                    .viewWithBBox(texture)
+                    .zIndex(200)
+                    .build();
+            FXGL.getGameWorld().addEntity(entity);
+            InputStream stream = getClass().getClassLoader().getResourceAsStream("../fxgl/spaceinvader/assets/levels/level1.tmx");
+            if (stream == null) {
+                System.out.println("Level file not found!");
+            } else {
+                System.out.println("Level file found!");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error loading level: " + e.getMessage());

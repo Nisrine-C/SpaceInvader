@@ -36,7 +36,7 @@ public class SpaceInvaderFactory implements EntityFactory {
     public Entity newPlayer(SpawnData data){
         return  FXGL.entityBuilder(data)
                 .type(SpaceInvaderType.PLAYER)
-                .viewWithBBox(new Rectangle(25,25, Color.BLUE))
+                .viewWithBBox("player.png")
                 .with(new InvincibleComponent())
                 .with(new PlayerComponent())
                 .collidable()
