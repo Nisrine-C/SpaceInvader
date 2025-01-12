@@ -23,17 +23,6 @@ import static com.almasb.fxgl.dsl.FXGL.texture;
 
 public class SpaceInvaderFactory implements EntityFactory {
 
-    @Spawns("Player")
-    public Entity newPlayer(SpawnData data){
-        return  FXGL.entityBuilder(data)
-                .type(SpaceInvaderType.PLAYER)
-                .view(new Rectangle(25,25, Color.BLUE))
-                .with(new CollidableComponent(true))
-                .with(new InvincibleComponent())
-                .with(new PlayerComponent())
-                .build();
-    }
-
     @Spawns("Background")
     public Entity newBackground(SpawnData data){
         return FXGL.entityBuilder(data)
@@ -43,13 +32,23 @@ public class SpaceInvaderFactory implements EntityFactory {
                 .build();
     }
 
+    @Spawns("Player")
+    public Entity newPlayer(SpawnData data){
+        return  FXGL.entityBuilder(data)
+                .type(SpaceInvaderType.PLAYER)
+                .viewWithBBox(new Rectangle(25,25, Color.BLUE))
+                .with(new InvincibleComponent())
+                .with(new PlayerComponent())
+                .collidable()
+                .buildAndAttach();
+    }
+
     @Spawns("Enemy")
     public Entity newEnemy(SpawnData data) {
         return entityBuilder(data)
                 .type(SpaceInvaderType.ENEMY)
-                .viewWithBBox(new Rectangle(25,25,Color.GREEN)
-                )
-                .with(new CollidableComponent(true))
+                .viewWithBBox(new Rectangle(25,25,Color.GREEN))
+                .collidable()
                 .with(new InvincibleComponent())
                 .with(new EnemyComponent())
                 .build();
@@ -60,13 +59,12 @@ public class SpaceInvaderFactory implements EntityFactory {
         Entity owner = data.get("owner");
         return FXGL.entityBuilder()
                 .type(SpaceInvaderType.BULLET)
-                .at(owner.getCenter().add(-3,18))
+                .at(owner.getCenter().add(3,18))
                 .viewWithBBox(new Rectangle(5,13,Color.RED))
                 .with(new OwnerComponent(owner.getType()))
                 .with(new BulletComponent(300))
                 .with(new OffscreenCleanComponent())
                 .collidable()
-
                 .with("dead",false)
                 .build();
     }

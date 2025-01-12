@@ -11,6 +11,8 @@ import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.input.Input;
+import fxgl.spaceinvader.collision.BulletEnemyHandler;
+import fxgl.spaceinvader.collision.BulletPlayerHandler;
 import fxgl.spaceinvader.component.PlayerComponent;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -54,6 +56,13 @@ public class SpaceInvaderApp extends GameApplication {
     }
 
     @Override
+    protected void initPhysics() {
+        getPhysicsWorld().addCollisionHandler(new BulletEnemyHandler());
+        getPhysicsWorld().addCollisionHandler(new BulletPlayerHandler());
+
+    }
+
+    @Override
     protected void initInput() {
         Input input = getInput();
 
@@ -85,15 +94,6 @@ public class SpaceInvaderApp extends GameApplication {
         Entity enemy = spawn("Enemy", x, y);
 
         addEnemy(enemy);
-
-        animationBuilder()
-                .interpolator(Interpolators.ELASTIC.EASE_OUT())
-                .duration(Duration.seconds(FXGLMath.random(0.0, 1.0) * 2))
-                .scale(enemy)
-                .from(new Point2D(0, 0))
-                .to(new Point2D(1, 1))
-                .buildAndPlay();
-
         return enemy;
     }
     public void spawnEnemies(){
@@ -172,6 +172,7 @@ public class SpaceInvaderApp extends GameApplication {
                 entity.setPosition(currentX, newY);
             }
         }
+
     }
 
 }
