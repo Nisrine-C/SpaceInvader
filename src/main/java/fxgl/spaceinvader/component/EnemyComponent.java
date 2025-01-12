@@ -4,6 +4,7 @@ import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent;
 import com.almasb.fxgl.dsl.components.ProjectileComponent;
+import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
@@ -16,6 +17,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.spawn;
 
 public class EnemyComponent extends Component {
 
@@ -40,14 +42,10 @@ public class EnemyComponent extends Component {
     }
 
     protected void shoot() {
-        var bullet = entityBuilder()
-                .at(getEntity().getCenter().subtract(2.5, 10)) // Position slightly above the player
-                .view(new Rectangle(5, 10, Color.YELLOW))      // Small yellow rectangle
-                .bbox(new HitBox(BoundingShape.box(5, 10)))    // Collision shape
-                .with(new ExpireCleanComponent(Duration.seconds(3))) // Remove bullet after 3 seconds
-                .with(new ProjectileComponent(new Point2D(0, 1), 150)) // Move bullet upwards
-                .type(SpaceInvaderType.BULLET)               // Mark as bullet type
-                .buildAndAttach();
+        spawn("Bullet",new SpawnData(0,0).put("owner",getEntity()));
+    }
 
+    public void die() {
+        entity.removeFromWorld();
     }
 }

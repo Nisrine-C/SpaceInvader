@@ -52,19 +52,11 @@ public class PlayerComponent extends Component {
 
     public void shoot(){
         if(!canShoot) return;
-        canShoot=false;
+
+        canShoot = false;
         lastTimeShot = getGameTimer().getNow();
 
-        var bullet = entityBuilder()
-                .at(getEntity().getCenter().subtract(2.5, 10)) // Position slightly above the player
-                .view(new Rectangle(5, 10, Color.YELLOW))      // Small yellow rectangle
-                .bbox(new HitBox(BoundingShape.box(5, 10)))    // Collision shape
-                .with(new ExpireCleanComponent(Duration.seconds(3))) // Remove bullet after 3 seconds
-                .with(new ProjectileComponent(new Point2D(0, -1), 150)) // Move bullet upwards
-                .type(SpaceInvaderType.BULLET)               // Mark as bullet type
-                .buildAndAttach();
-
-
+        spawn("Bullet", new SpawnData(0, 0).put("owner", getEntity()));
     }
 
     public void die() {

@@ -12,6 +12,8 @@ import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.input.Input;
 import fxgl.spaceinvader.component.PlayerComponent;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
@@ -113,23 +115,72 @@ public class SpaceInvaderApp extends GameApplication {
         launch(args);
     }
 
-    private static class MoveComponent extends Component {
+    public class MoveComponent extends Component {
 
-        private double t = 0;
+        private Point2D direction;
+        private Timeline movementTimer;
+        private double speed = 300;
+
+        // Boundaries to reverse direction
+        private static final double LEFT_BOUND = 50;
+        private static final double RIGHT_BOUND = WIDTH-25;
+
+
+        private static final double DOWN_DROP = 50;
+        private boolean movingDown = false;
+
 
         @Override
-        public void onUpdate(double tpf) {
-            entity.setPosition(curveFunction().add(WIDTH / 2, HEIGHT / 2 - 100));
+        public void onAdded() {
+            // Start by moving to the right initially
+            direction = new Point2D(1, 0);
 
-            t += tpf;
+            // Set up the timer to update the movement every 0.5 seconds
+            movementTimer = new Timeline(new KeyFrame(Duration.seconds(0.5), event -> updateMovement()));
+            movementTimer.setCycleCount(Timeline.INDEFINITE);
+            movementTimer.play();
         }
 
-        private Point2D curveFunction() {
-            double x = cos(5*t) - cos(2*t);
-            double y = sin(3*t) - sin(t);
+        @Override
+        public void onRemoved() {
+            if (movementTimer != null) {
+                movementTimer.stop();
+            }
+        }
 
-            return new Point2D(x, -y).multiply(85);
+        private void updateMovement() {
+            double currentX = entity.getX();
+            double currentY = entity.getY();
+
+            if (!movingDown) {
+                double newX = currentX + direction.getX() * speed * 0.1;
+
+                // If enemy hits left or right boundary, reverse direction and move down
+                if (newX <= LEFT_BOUND || newX >= RIGHT_BOUND) {
+                    direction = direction.multiply(-1); // Reverse the direction horizontally
+                    movingDown = true; // After hitting boundary, move down
+                } else {
+                    // Update the enemy's position horizontally
+                    entity.setPosition(newX, currentY);
+                }
+            } else {
+                // If moving down, update vertical position
+                double newY = currentY + DOWN_DROP;
+
+                // After moving down, reset movingDown flag and continue horizontal movement
+                movingDown = false;
+                entity.setPosition(currentX, newY);
+            }
         }
     }
+
 }
+
+
+
+
+
+
+
+
 
