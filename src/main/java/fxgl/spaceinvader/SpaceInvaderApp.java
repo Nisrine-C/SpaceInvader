@@ -17,10 +17,12 @@ import com.almasb.fxgl.texture.Texture;
 import fxgl.spaceinvader.collision.BulletEnemyHandler;
 import fxgl.spaceinvader.collision.BulletPlayerHandler;
 import fxgl.spaceinvader.component.PlayerComponent;
+import fxgl.spaceinvader.particles.ParticleSystem;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.io.InputStream;
@@ -35,6 +37,9 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
 public class SpaceInvaderApp extends GameApplication {
+
+
+    private ParticleSystem particleSystem;
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -53,6 +58,11 @@ public class SpaceInvaderApp extends GameApplication {
 
     @Override
     protected void initGame() {
+        getGameScene().setBackgroundColor(Color.BLACK);
+
+        particleSystem = new ParticleSystem();
+        particleSystem.spawnParticles();
+
         FXGL.getGameWorld().addEntityFactory(new SpaceInvaderFactory());
         spawnBackground();
 
