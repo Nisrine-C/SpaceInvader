@@ -6,7 +6,7 @@ public final class Config {
     public static final String SAVE_DATA_NAME = "./hiscore.dat";
 
     public static final int WIDTH = 512;
-    public static final int HEIGHT = 712;
+    public static final int HEIGHT = 720;
 
 
     public static final double LEVEL_START_DELAY = 1.5;
@@ -31,7 +31,7 @@ public final class Config {
      * Attack speed, bullet per second.
      */
     public static final double PLAYER_ATTACK_SPEED = 3.0;
-    public static final double PLAYER_BONUS_ATTACK_SPEED = 0.25;
+
 
     public static final double LASER_METER_MAX = 50.0;
 
@@ -40,15 +40,7 @@ public final class Config {
      */
     public static final double LASER_METER_RECHARGE = 1.0;
 
-    /**
-     * Deplete per second (when activated).
-     */
-    public static final double LASER_METER_DEPLETE = 50.0;
 
-    public static final double INVINCIBILITY_TIME = 1.0;
-
-    public static final int ACHIEVEMENT_ENEMIES_KILLED = 40;
-    public static final int ACHIEVEMENT_MASTER_SCORER = 1000;
 
     /**
     public static final class Asset {

@@ -16,6 +16,7 @@ import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.texture.Texture;
 import fxgl.spaceinvader.collision.BulletEnemyHandler;
 import fxgl.spaceinvader.collision.BulletPlayerHandler;
+import fxgl.spaceinvader.collision.BulletWallHandler;
 import fxgl.spaceinvader.component.PlayerComponent;
 import fxgl.spaceinvader.particles.ParticleSystem;
 import javafx.animation.KeyFrame;
@@ -59,45 +60,18 @@ public class SpaceInvaderApp extends GameApplication {
     @Override
     protected void initGame() {
         getGameScene().setBackgroundColor(Color.BLACK);
-
+        FXGL.getGameWorld().addEntityFactory(new SpaceInvaderFactory());
+        FXGL.setLevelFromMap("level1.tmx");
         particleSystem = new ParticleSystem();
         particleSystem.spawnParticles();
-
-        FXGL.getGameWorld().addEntityFactory(new SpaceInvaderFactory());
-        spawnBackground();
-
-        try {
-
-
-            Texture texture= FXGL.texture("../fxgl/spaceinvader/assets/textures/player.png");
-            //FXGL.setLevelFromMap("level1.tmx");
-            System.out.println(texture);
-            Entity entity = entityBuilder()
-                    .from(new SpawnData(50,50))
-                    .viewWithBBox(texture)
-                    .zIndex(200)
-                    .build();
-            FXGL.getGameWorld().addEntity(entity);
-            InputStream stream = getClass().getClassLoader().getResourceAsStream("../fxgl/spaceinvader/assets/levels/level1.tmx");
-            if (stream == null) {
-                System.out.println("Level file not found!");
-            } else {
-                System.out.println("Level file found!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error loading level: " + e.getMessage());
-        }
-        //FXGL.setLevelFromMap("level1.tmx");
         spawnPlayer();
-        spawnEnemies();
     }
 
     @Override
     protected void initPhysics() {
         getPhysicsWorld().addCollisionHandler(new BulletEnemyHandler());
         getPhysicsWorld().addCollisionHandler(new BulletPlayerHandler());
-
+        getPhysicsWorld().addCollisionHandler(new BulletWallHandler());
     }
 
     @Override
@@ -110,45 +84,14 @@ public class SpaceInvaderApp extends GameApplication {
 
     }
 
-
     private Entity player;
-    private List<Entity> enemies = new ArrayList<>();
-
     private PlayerComponent playerComponent;
 
     public void spawnPlayer () {
         player = FXGL.spawn("Player",WIDTH/2-20,HEIGHT-100);
         playerComponent = player.getComponent(PlayerComponent.class);
     }
-    public void spawnBackground(){
-        FXGL.spawn("Background", new SpawnData(0, 0).put("width", WIDTH).put("height", HEIGHT));
-    }
 
-    protected void addEnemy(Entity entity) {
-        enemies.add(entity);
-    }
-
-    public Entity spawnEnemy(double x, double y) {
-        Entity enemy = spawn("Enemy", x, y);
-
-        addEnemy(enemy);
-        return enemy;
-    }
-    public void spawnEnemies(){
-        double t = 0;
-
-        for (int y = 0; y < ENEMY_ROWS; y++) {
-            for (int x = 0; x < ENEMIES_PER_ROW; x++) {
-
-                runOnce(() -> {
-                    Entity enemy = spawnEnemy(50, 50);
-                    enemy.addComponent(new MoveComponent());
-                }, Duration.seconds(t));
-
-                t += 0.1;
-            }
-        }
-    }
     public static void main(String[] args) {
         launch(args);
     }
@@ -212,7 +155,6 @@ public class SpaceInvaderApp extends GameApplication {
         }
 
     }
-
 }
 
 

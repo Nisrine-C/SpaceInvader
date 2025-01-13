@@ -32,6 +32,29 @@ public class SpaceInvaderFactory implements EntityFactory {
                 .build();
     }
 
+    @Spawns("Wall_left")
+    public Entity newWallLeft(SpawnData data) {
+        return entityBuilder()
+                .from(data)
+                .type(SpaceInvaderType.WALL)
+                .viewWithBBox(texture("wall_left_1.png"))
+                .with(new CollidableComponent(true))
+                .with(new WallComponent(7))
+                .build();
+    }
+
+    @Spawns("Wall_right")
+    public Entity newWallRight(SpawnData data) {
+        return entityBuilder()
+                .from(data)
+                .type(SpaceInvaderType.WALL)
+                .viewWithBBox(texture("wall_right_1.png"))
+                .with(new CollidableComponent(true))
+                .with(new WallComponent(7))
+                .build();
+    }
+
+
     @Spawns("Player")
     public Entity newPlayer(SpawnData data){
         return  FXGL.entityBuilder(data)
@@ -47,8 +70,8 @@ public class SpaceInvaderFactory implements EntityFactory {
     public Entity newEnemy(SpawnData data) {
         return entityBuilder(data)
                 .type(SpaceInvaderType.ENEMY)
-                .viewWithBBox(new Rectangle(25,25,Color.GREEN))
-                .with(new CollidableComponent(true),new HealthIntComponent(2),new TimeComponent(1))
+                .viewWithBBox("Enemy.png")
+                .with(new CollidableComponent(true),new HealthIntComponent(3),new TimeComponent(1))
                 .with(new InvincibleComponent())
                 .with(new EnemyComponent(),new EffectComponent())
                 .build();
