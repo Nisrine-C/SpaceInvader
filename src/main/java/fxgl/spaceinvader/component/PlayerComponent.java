@@ -29,6 +29,9 @@ public class PlayerComponent extends Component {
     private boolean canShoot = true;
     private double lastTimeShot = 0;
 
+    private boolean canGenerateShield=true;
+    private double lastTimeGeneratedShield = 0;
+
     @Override
     public void onUpdate(double tpf) {
         dx = Config.PLAYER_MOVE_SPEED *tpf;
@@ -38,6 +41,13 @@ public class PlayerComponent extends Component {
                 canShoot = true;
             }
         }
+
+        if(!canGenerateShield) {
+            if((getGameTimer().getNow() - lastTimeGeneratedShield) >= Config.SHIELD_COOLDOWN){
+                canGenerateShield = true;
+            }
+        }
+
     }
 
     public void left(){
@@ -57,6 +67,18 @@ public class PlayerComponent extends Component {
         lastTimeShot = getGameTimer().getNow();
         spawn("Bullet", new SpawnData(0, 0).put("owner", getEntity()));
     }
+
+    public void shieldUp(){
+        if(!canGenerateShield)return;
+        canGenerateShield=false;
+        lastTimeGeneratedShield = getGameTimer().getNow();
+        spawn("Shield", new SpawnData(0,0).put("owner",getEntity()));
+    }
+
+    public void enableInvincibility() {
+        invincibility.setValue(true);
+    }
+    public void disableInvincibility(){invincibility.setValue(false);}
 
     public void die() {
         entity.removeFromWorld();

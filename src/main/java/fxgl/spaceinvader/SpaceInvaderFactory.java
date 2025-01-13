@@ -11,6 +11,7 @@ import com.almasb.fxgl.entity.components.IrremovableComponent;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.entity.components.TimeComponent;
+import com.almasb.fxgl.texture.Texture;
 import fxgl.spaceinvader.component.*;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
@@ -63,7 +64,26 @@ public class SpaceInvaderFactory implements EntityFactory {
                 .with(new InvincibleComponent())
                 .with(new PlayerComponent())
                 .collidable()
-                .buildAndAttach();
+                .build();
+    }
+
+    @Spawns("Shield")
+    public Entity newShield(SpawnData data){
+
+        Entity owner = data.get("owner");
+        Texture shieldTexture = FXGL.texture("shield.png");
+        double shieldWidth = shieldTexture.getWidth();
+        double shieldHeight = shieldTexture.getHeight();
+        Point2D spawnPosition = owner.getCenter().subtract(shieldWidth / 2, shieldHeight / 2);
+        return FXGL.entityBuilder()
+                .type(SpaceInvaderType.SHIELD)
+                .at(spawnPosition)
+                .viewWithBBox("shield.png")
+                .with(new ShieldComponent(owner,2))
+                .with(new OffscreenCleanComponent())
+
+                .collidable()
+                .build();
     }
 
     @Spawns("Enemy")
@@ -87,6 +107,7 @@ public class SpaceInvaderFactory implements EntityFactory {
                 .with(new OwnerComponent(owner.getType()))
                 .with(new BulletComponent(300))
                 .with(new OffscreenCleanComponent())
+                .with()
                 .collidable()
                 .with("dead",false)
                 .build();
