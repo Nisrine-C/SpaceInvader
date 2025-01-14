@@ -5,6 +5,7 @@ import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.MenuItem;
 import com.almasb.fxgl.app.GameSettings;
+import fxgl.spaceinvader.event.GameEvent;
 import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
@@ -63,6 +64,11 @@ public class SpaceInvaderApp extends GameApplication {
     }
 
     @Override
+    protected void onPreInit() {
+        onEvent(GameEvent.ENEMY_KILLED,this::onEnemyKilled);
+    }
+
+    @Override
     protected void initInput() {
         Input input = getInput();
 
@@ -78,7 +84,7 @@ public class SpaceInvaderApp extends GameApplication {
     @Override
     protected void initGameVars(Map<String, Object> vars) {
         vars.put("score", 0);
-        vars.put("level", 1); // Tracks the current level index
+        vars.put("level", 0); // Tracks the current level index
         vars.put("lives", START_LIVES);
         vars.put("enemiesKilled", 0);
     }
@@ -90,10 +96,7 @@ public class SpaceInvaderApp extends GameApplication {
         );
 
         getGameWorld().addEntityFactory(new SpaceInvaderFactory());
-        setLevelFromMap("level1.tmx");
-        getGameWorld().getEntitiesByType(SpaceInvaderType.ENEMY).forEach(enemy ->{
-            enemy.addComponent(new MoveComponent());
-        });
+        startLevel();
         spawnBackground();
         spawnPlayer();
     }
@@ -119,101 +122,42 @@ public class SpaceInvaderApp extends GameApplication {
 
     private void startLevel() {
         int levelIndex = geti("level"); // Get the current level index
+        levels.getFirst().init();
 
-        // Cleanup previous level
-        if (currentLevel != null) {
-            currentLevel.destroy();
-            cleanupLevel();
-        }
-
-        // Load the next level
-        if (levelIndex < levels.size()) {
-            currentLevel = levels.get(levelIndex);
-            currentLevel.init();
-        } else {
-            System.out.println("No more levels to load. Game Over!");
-            endGame();
-        }
     }
 
     @Override
     protected void onUpdate(double tpf) {
-        System.out.println(geti("enemiesKilled"));
+        List<Entity> enemies = getGameWorld().getEntitiesByType(SpaceInvaderType.ENEMY);
+        if(enemies.size() == 0){
+            endGame();
+        }
     }
 
     private void cleanupLevel() {
         getGameWorld().getEntitiesByType(
                 SpaceInvaderType.ENEMY,
                 SpaceInvaderType.WALL,
-                SpaceInvaderType.BULLET
+                SpaceInvaderType.BULLET,
+                SpaceInvaderType.PLAYER
         ).forEach(Entity::removeFromWorld);
     }
 
     private void endGame() {
         System.out.println("Game Over! Final Score: " + geti("score"));
-        // Add any additional game-over logic, such as showing a UI screen
+        cleanupLevel();
+        setLevelFromMap("level2.tmx");
+        spawnBackground();
+        spawnPlayer();
+    }
+
+    public void onEnemyKilled(GameEvent event){
+        System.out.println("Hello");
+        FXGL.inc("score",+100);
+        FXGL.inc("enemiesKilled",+1);
     }
 
     public static void main(String[] args) {
         launch(args);
-    }
-    public class MoveComponent extends Component {
-
-        private Point2D direction;
-        private Timeline movementTimer;
-        private double speed = 300;
-
-        // Boundaries to reverse direction
-        private static final double LEFT_BOUND = 50;
-        private static final double RIGHT_BOUND = WIDTH-25;
-
-
-        private static final double DOWN_DROP = 50;
-        private boolean movingDown = false;
-
-
-        @Override
-        public void onAdded() {
-            // Start by moving to the right initially
-            direction = new Point2D(1, 0);
-
-            // Set up the timer to update the movement every 0.5 seconds
-            movementTimer = new Timeline(new KeyFrame(Duration.seconds(0.5), event -> updateMovement()));
-            movementTimer.setCycleCount(Timeline.INDEFINITE);
-            movementTimer.play();
-        }
-
-        @Override
-        public void onRemoved() {
-            if (movementTimer != null) {
-                movementTimer.stop();
-            }
-        }
-
-        private void updateMovement() {
-            double currentX = entity.getX();
-            double currentY = entity.getY();
-
-            if (!movingDown) {
-                double newX = currentX + direction.getX() * speed * 0.1;
-
-                // If enemy hits left or right boundary, reverse direction and move down
-                if (newX <= LEFT_BOUND  || newX >= RIGHT_BOUND - 48) {
-                    direction = direction.multiply(-1); // Reverse the direction horizontally
-                    movingDown = true; // After hitting boundary, move down
-                } else {
-                    // Update the enemy's position horizontally
-                    entity.setPosition(newX, currentY);
-                }
-            } else {
-                // If moving down, update vertical position
-                double newY = currentY + DOWN_DROP;
-
-                // After moving down, reset movingDown flag and continue horizontal movement
-                movingDown = false;
-                entity.setPosition(currentX, newY);
-            }
-        }
-
     }
 }

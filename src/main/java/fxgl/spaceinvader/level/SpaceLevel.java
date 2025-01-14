@@ -62,17 +62,6 @@ public abstract class SpaceLevel {
         return enemies.stream().noneMatch(Entity::isActive);
     }
 
-    protected void loadLevelFromTMX(String tmxFilePath) {
-        // Load level from the specified .tmx file
-        Level level = getAssetLoader().loadLevel(tmxFilePath, new TMXLevelLoader());
-
-        // Extract entities from the level based on object layers
-        level.getEntities().forEach(entity -> {
-            if (entity.isType(SpaceInvaderType.ENEMY)) {
-                addEnemy(entity);
-            }
-        });
-    }
 
     public List<Entity> getEnemies(){return enemies;}
 }

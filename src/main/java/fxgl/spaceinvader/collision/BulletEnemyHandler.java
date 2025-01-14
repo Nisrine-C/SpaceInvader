@@ -1,5 +1,6 @@
 package fxgl.spaceinvader.collision;
 
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.dsl.components.Effect;
 import com.almasb.fxgl.dsl.components.EffectComponent;
 import com.almasb.fxgl.dsl.components.HealthIntComponent;
@@ -9,6 +10,7 @@ import com.almasb.fxgl.physics.CollisionHandler;
 import fxgl.spaceinvader.SpaceInvaderType;
 import fxgl.spaceinvader.component.EnemyComponent;
 import fxgl.spaceinvader.component.OwnerComponent;
+import fxgl.spaceinvader.component.WallComponent;
 import javafx.util.Duration;
 
 
@@ -22,6 +24,7 @@ public class BulletEnemyHandler extends CollisionHandler {
     protected void onCollisionBegin(Entity bullet, Entity enemy) {
         Object owner = bullet.getComponent(OwnerComponent.class).getValue();
 
+
         if(owner == SpaceInvaderType.ENEMY) {
             return;
         }
@@ -29,25 +32,7 @@ public class BulletEnemyHandler extends CollisionHandler {
         hp.damage(1);
 
         bullet.removeFromWorld();
-        if(hp.isZero()){
-            if(enemy.hasComponent(EnemyComponent.class)){
-                enemy.getComponent(EnemyComponent.class).die();
-            }
-        }else{
-            enemy.getComponentOptional(EffectComponent.class).ifPresent(e->e.startEffect(new Effect(Duration.seconds(1)) {
-                @Override
-                public void onStart(Entity entity) {
-                    entity.getComponent(TimeComponent.class).setValue(0.15);
-                }
-
-                @Override
-                public void onEnd(Entity entity) {
-                    entity.getComponent(TimeComponent.class).setValue(1);
-                }
-            }));
-        }
-
-        enemy.getComponent(EnemyComponent.class).die();
+        enemy.getComponent(EnemyComponent.class).onHit();
 
     }
 }

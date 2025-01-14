@@ -10,10 +10,10 @@ import javafx.util.Duration;
 
 import static fxgl.spaceinvader.Config.WIDTH;
 
-public class Level1 extends SpaceLevel{
+public class Level2 extends SpaceLevel{
     @Override
     public void init() {
-        FXGL.setLevelFromMap("level1.tmx");
+        FXGL.setLevelFromMap("level2.tmx");
         FXGL.getGameWorld().getEntitiesByType(SpaceInvaderType.ENEMY).forEach(enemy->{
             enemy.addComponent(new MoveComponent());
         });

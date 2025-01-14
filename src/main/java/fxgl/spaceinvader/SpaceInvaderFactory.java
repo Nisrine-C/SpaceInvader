@@ -93,7 +93,7 @@ public class SpaceInvaderFactory implements EntityFactory {
                 .viewWithBBox("Enemy.png")
                 .with(new CollidableComponent(true),new HealthIntComponent(3),new TimeComponent(1))
                 .with(new InvincibleComponent())
-                .with(new EnemyComponent(),new EffectComponent())
+                .with(new EnemyComponent(3),new EffectComponent())
                 .build();
     }
 
