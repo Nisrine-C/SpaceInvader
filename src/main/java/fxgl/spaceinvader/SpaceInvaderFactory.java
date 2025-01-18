@@ -11,6 +11,9 @@ import com.almasb.fxgl.entity.components.IrremovableComponent;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.entity.components.TimeComponent;
+import com.almasb.fxgl.particle.ParticleComponent;
+import com.almasb.fxgl.particle.ParticleEmitter;
+import com.almasb.fxgl.particle.ParticleEmitters;
 import com.almasb.fxgl.texture.Texture;
 import fxgl.spaceinvader.component.*;
 import javafx.geometry.Point2D;
@@ -18,8 +21,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
-import static com.almasb.fxgl.dsl.FXGL.texture;
+import static com.almasb.fxgl.dsl.FXGL.*;
+import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
 
 
 public class SpaceInvaderFactory implements EntityFactory {
@@ -54,7 +57,6 @@ public class SpaceInvaderFactory implements EntityFactory {
                 .with(new WallComponent(8,"right"))
                 .build();
     }
-
 
     @Spawns("Player")
     public Entity newPlayer(SpawnData data){
@@ -104,7 +106,7 @@ public class SpaceInvaderFactory implements EntityFactory {
                 .viewWithBBox("Frog.png")
                 .with(new CollidableComponent(true),new HealthIntComponent(3),new TimeComponent(1))
                 .with(new InvincibleComponent())
-                .with(new EnemyComponent(3,EnemyType.FROG),new EffectComponent())
+                .with(new EnemyComponent(2,EnemyType.FROG),new EffectComponent())
                 .build();
     }
 
@@ -115,7 +117,7 @@ public class SpaceInvaderFactory implements EntityFactory {
                 .viewWithBBox("Demon.png")
                 .with(new CollidableComponent(true),new HealthIntComponent(3),new TimeComponent(1))
                 .with(new InvincibleComponent())
-                .with(new EnemyComponent(3,EnemyType.DEMON),new EffectComponent())
+                .with(new EnemyComponent(1,EnemyType.DEMON),new EffectComponent())
                 .build();
     }
 
@@ -126,7 +128,7 @@ public class SpaceInvaderFactory implements EntityFactory {
         return FXGL.entityBuilder()
                 .type(SpaceInvaderType.BULLET)
                 .at(owner.getCenter().add(3,18))
-                .viewWithBBox(new Rectangle(5,13,Color.RED))
+                .viewWithBBox(new Rectangle(5,13,Color.rgb(191,255,234,1)))
                 .with(new OwnerComponent(owner.getType()))
                 .with(new BulletComponent(300))
                 .with(new OffscreenCleanComponent())
@@ -167,4 +169,24 @@ public class SpaceInvaderFactory implements EntityFactory {
                 .with("dead",false)
                 .build();
     }
+
+    @Spawns("Explosion")
+    public Entity newExplosion(SpawnData data) {
+        play("explosion.wav");
+
+        var texture = texture("Explosion.png",32  * 7, 32).toAnimatedTexture(7, Duration.seconds(0.5));
+
+
+        var e = entityBuilder()
+                .at(data.getX() - 20, data.getY() - 20)
+                .view(texture.loop())
+                .build();
+
+        texture.setOnCycleFinished(() -> e.removeFromWorld());
+
+        return e;
+    }
+
+
 }
+

@@ -11,6 +11,10 @@ import javafx.util.Duration;
 import static fxgl.spaceinvader.Config.WIDTH;
 
 public class Level2 extends SpaceLevel{
+    public Level2(String level) {
+        super(level);
+    }
+
     @Override
     public void init() {
         FXGL.setLevelFromMap("level2.tmx");

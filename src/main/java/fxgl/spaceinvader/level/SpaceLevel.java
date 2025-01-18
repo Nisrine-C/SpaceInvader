@@ -27,41 +27,27 @@ import static com.almasb.fxgl.dsl.FXGL.*;
  */
 public abstract class SpaceLevel {
 
-    private List<Entity> enemies = new ArrayList<>();
+    private String level;
+    private List<Entity> enemies;
 
-    public SpaceLevel() {
-
+    public SpaceLevel(String level) {
+        this.level=level;
+        enemies = new ArrayList<>();
     }
 
-    public abstract void init();
+    public void init(){
 
-    public void onUpdate(double tpf) {
+    };
 
+    public List<Entity> getEnemies() {
+        return enemies;
     }
 
-    public void destroy() {
-
+    public void setEnemies(List<Entity> enemies) {
+        this.enemies = enemies;
     }
 
-    public void playInCutscene(Runnable onFinished) {
-        onFinished.run();
+    public String getLevel() {
+        return level;
     }
-
-    public void playOutCutscene(Runnable onFinished) {
-        onFinished.run();
-    }
-
-
-
-    protected void addEnemy(Entity entity) {
-        enemies.add(entity);
-    }
-
-
-    public boolean isFinished() {
-        return enemies.stream().noneMatch(Entity::isActive);
-    }
-
-
-    public List<Entity> getEnemies(){return enemies;}
 }

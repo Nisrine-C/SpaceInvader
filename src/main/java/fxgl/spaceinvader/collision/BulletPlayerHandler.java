@@ -1,6 +1,6 @@
 package fxgl.spaceinvader.collision;
 
-import com.almasb.fxgl.dsl.FXGL;
+import static com.almasb.fxgl.dsl.FXGL.*;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.physics.CollisionHandler;
 import fxgl.spaceinvader.SpaceInvaderType;
@@ -23,6 +23,6 @@ public class BulletPlayerHandler extends CollisionHandler {
         }
 
         bullet.removeFromWorld();
-        FXGL.getEventBus().fireEvent(new GameEvent(GameEvent.PLAYER_GOT_HIT));
+        fire(new GameEvent(GameEvent.PLAYER_GOT_HIT));
     }
 }

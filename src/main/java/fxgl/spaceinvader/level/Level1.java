@@ -1,21 +1,27 @@
 package fxgl.spaceinvader.level;
 
-import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.entity.Entity;
+
 import com.almasb.fxgl.entity.component.Component;
-import com.sun.tools.jconsole.JConsoleContext;
+
 import fxgl.spaceinvader.Config;
 import fxgl.spaceinvader.SpaceInvaderType;
-import javafx.geometry.Point2D;
-import static com.almasb.fxgl.dsl.FXGL.getAppHeight;
-import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
+import fxgl.spaceinvader.event.GameEvent;
+
+import static com.almasb.fxgl.dsl.FXGL.*;
+import static fxgl.spaceinvader.Config.HEIGHT;
 
 public class Level1 extends SpaceLevel {
+
+    public Level1(String level) {
+        super(level);
+    }
+
     @Override
     public void init() {
-        FXGL.setLevelFromMap("level1.tmx");
-        FXGL.getGameWorld().getEntitiesByType(SpaceInvaderType.ENEMY).forEach(enemy -> {
-            enemy.addComponent(new MoveComponent(20,1));
+        setLevelFromMap(getLevel());
+        setEnemies(getGameWorld().getEntitiesByType(SpaceInvaderType.ENEMY));
+        getEnemies().forEach(enemy -> {
+            enemy.addComponent(new Level1.MoveComponent(20,2));
         });
     }
 
@@ -46,9 +52,11 @@ public class Level1 extends SpaceLevel {
 
             if(entity.getX() + entity.getWidth() / 2 >= Config.WIDTH -25 || entity.getX() - entity.getWidth() / 2 <= 0){
                 speed=-speed;
-                newY = entity.getY() + entity.getHeight();
+                newY = entity.getY() + entity.getHeight() + 16;
                 entity.setPosition( entity.getX(),newY);
-
+            }
+            if(entity.getY() >= HEIGHT - 284){
+                fire(new GameEvent(GameEvent.ENEMY_REACHED_END));
             }
         }
 

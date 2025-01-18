@@ -33,19 +33,10 @@ public class SpaceInvaderController implements UIController {
     private Label labelScore;
 
     @FXML
-    private Label labelHighScore;
+    private Double livesX;
 
     @FXML
-    private ProgressBar laserMeter;
-
-    @FXML
-    private Pane paneLaserReady;
-
-    @FXML
-    private double livesX;
-
-    @FXML
-    private double livesY;
+    private Double livesY;
 
     private List<Texture> lives = new ArrayList<>();
 
@@ -58,31 +49,19 @@ public class SpaceInvaderController implements UIController {
     @Override
     public void init() {
         labelScore.setFont(getUIFactoryService().newFont(18));
-        labelHighScore.setFont(getUIFactoryService().newFont(18));
-
-        labelHighScore.setVisible(false);
-
 
         FXGLTextFlow flow = getUIFactoryService().newTextFlow();
         // TODO: bind dynamically to trigger
         flow.append("Press ", Color.WHITE).append(MouseButton.SECONDARY, Color.BLUE);
 
-        paneLaserReady.getChildren().add(flow);
-
-        paneLaserReady.visibleProperty().bind(laserMeter.currentValueProperty().isEqualTo(Config.LASER_METER_MAX, 0.0));
     }
 
     public Label getLabelScore() {
-
+        System.out.println(labelScore);
         if (labelScore == null) {
             System.out.println("labelScore is null!");
         }
         return labelScore;
-    }
-
-
-    public ProgressBar getLaserMeter() {
-        return laserMeter;
     }
 
     public void addLife() {

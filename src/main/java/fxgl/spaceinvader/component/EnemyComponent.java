@@ -83,5 +83,6 @@ public class EnemyComponent extends Component {
     public void die() {
         FXGL.fire(new GameEvent(GameEvent.ENEMY_KILLED));
         entity.removeFromWorld();
+        FXGL.spawn("Explosion", entity.getCenter());
     }
 }
