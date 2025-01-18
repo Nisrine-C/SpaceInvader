@@ -40,7 +40,7 @@ public class SpaceInvaderFactory implements EntityFactory {
                 .type(SpaceInvaderType.WALL)
                 .viewWithBBox(texture("wall_left_1.png"))
                 .with(new CollidableComponent(true))
-                .with(new WallComponent(7))
+                .with(new WallComponent(8,"left"))
                 .build();
     }
 
@@ -51,7 +51,7 @@ public class SpaceInvaderFactory implements EntityFactory {
                 .type(SpaceInvaderType.WALL)
                 .viewWithBBox(texture("wall_right_1.png"))
                 .with(new CollidableComponent(true))
-                .with(new WallComponent(7))
+                .with(new WallComponent(8,"right"))
                 .build();
     }
 
@@ -86,16 +86,39 @@ public class SpaceInvaderFactory implements EntityFactory {
                 .build();
     }
 
-    @Spawns("Enemy")
-    public Entity newEnemy(SpawnData data) {
+    @Spawns("Egg")
+    public Entity newEgg(SpawnData data) {
         return entityBuilder(data)
                 .type(SpaceInvaderType.ENEMY)
-                .viewWithBBox("Enemy.png")
+                .viewWithBBox("Egg.png")
                 .with(new CollidableComponent(true),new HealthIntComponent(3),new TimeComponent(1))
                 .with(new InvincibleComponent())
-                .with(new EnemyComponent(3),new EffectComponent())
+                .with(new EnemyComponent(3,EnemyType.EGG),new EffectComponent())
                 .build();
     }
+
+    @Spawns("Frog")
+    public Entity newFrog(SpawnData data) {
+        return entityBuilder(data)
+                .type(SpaceInvaderType.ENEMY)
+                .viewWithBBox("Frog.png")
+                .with(new CollidableComponent(true),new HealthIntComponent(3),new TimeComponent(1))
+                .with(new InvincibleComponent())
+                .with(new EnemyComponent(3,EnemyType.FROG),new EffectComponent())
+                .build();
+    }
+
+    @Spawns("Demon")
+    public Entity newDemon(SpawnData data) {
+        return entityBuilder(data)
+                .type(SpaceInvaderType.ENEMY)
+                .viewWithBBox("Demon.png")
+                .with(new CollidableComponent(true),new HealthIntComponent(3),new TimeComponent(1))
+                .with(new InvincibleComponent())
+                .with(new EnemyComponent(3,EnemyType.DEMON),new EffectComponent())
+                .build();
+    }
+
 
     @Spawns("Bullet")
     public Entity newBullet(SpawnData data){
@@ -106,6 +129,38 @@ public class SpaceInvaderFactory implements EntityFactory {
                 .viewWithBBox(new Rectangle(5,13,Color.RED))
                 .with(new OwnerComponent(owner.getType()))
                 .with(new BulletComponent(300))
+                .with(new OffscreenCleanComponent())
+                .with()
+                .collidable()
+                .with("dead",false)
+                .build();
+    }
+
+    @Spawns("EnemyBullet")
+    public Entity newEnemyBullet(SpawnData data){
+        Entity owner = data.get("owner");
+        return FXGL.entityBuilder()
+                .type(SpaceInvaderType.BULLET)
+                .at(owner.getCenter().add(3,18))
+                .viewWithBBox("EnemyBullet.png")
+                .with(new OwnerComponent(owner.getType()))
+                .with(new BulletComponent(200))
+                .with(new OffscreenCleanComponent())
+                .with()
+                .collidable()
+                .with("dead",false)
+                .build();
+    }
+
+    @Spawns("EnemyCluster")
+    public Entity newEnemyCluster(SpawnData data){
+        Entity owner = data.get("owner");
+        return FXGL.entityBuilder()
+                .type(SpaceInvaderType.BULLET)
+                .at(owner.getCenter().add(3,18))
+                .viewWithBBox("EnemyCluster.png")
+                .with(new OwnerComponent(owner.getType()))
+                .with(new BulletComponent(100))
                 .with(new OffscreenCleanComponent())
                 .with()
                 .collidable()

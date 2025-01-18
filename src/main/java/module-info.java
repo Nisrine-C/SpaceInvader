@@ -5,6 +5,7 @@ open module fxgl.spaceinvader {
     requires javafx.fxml;
 
     requires com.almasb.fxgl.all;
+    requires jdk.jconsole;
 
     exports fxgl.spaceinvader;
 

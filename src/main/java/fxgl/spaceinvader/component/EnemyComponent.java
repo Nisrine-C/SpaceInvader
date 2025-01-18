@@ -12,6 +12,7 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.time.LocalTimer;
 
+import fxgl.spaceinvader.EnemyType;
 import fxgl.spaceinvader.SpaceInvaderType;
 import fxgl.spaceinvader.event.GameEvent;
 import javafx.geometry.Point2D;
@@ -27,11 +28,13 @@ public class EnemyComponent extends Component {
     protected LocalTimer attackTimer;
     protected Duration nextAttack = Duration.seconds(2);
 
+    private EnemyType subType;
     private final int originalLives;
     private int lives;
 
-    public EnemyComponent(int lives ){
+    public EnemyComponent(int lives, EnemyType subType ){
         this.lives = lives;
+        this.subType = subType;
         originalLives = lives;
     }
 
@@ -53,7 +56,20 @@ public class EnemyComponent extends Component {
     }
 
     protected void shoot() {
-        spawn("Bullet",new SpawnData(0,0).put("owner",getEntity()));
+        switch(subType) {
+            case EnemyType.EGG :
+                spawn("EnemyBullet",new SpawnData(0,0).put("owner",getEntity()));
+                break;
+            case EnemyType.FROG:
+                spawn("EnemyCluster",new SpawnData(0,0).put("owner",getEntity()));
+                break;
+            case EnemyType.DEMON:
+                spawn("EnemyBullet",new SpawnData(0,0).put("owner",getEntity()));
+                break;
+            default:
+                break;
+        }
+
     }
 
     public void onHit(){
@@ -61,8 +77,6 @@ public class EnemyComponent extends Component {
         if (lives == 0) {
             entity.getComponent(CollidableComponent.class).setValue(false);
             this.die();
-        } else if (lives == originalLives / 2) {
-            entity.getViewComponent().clearChildren();
         }
     }
 
