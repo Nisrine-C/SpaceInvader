@@ -49,7 +49,6 @@ public class SpaceInvaderApp extends GameApplication {
 
     private ParticleSystem particleSystem;
     private List<SpaceLevel> levels;
-    private SpaceInvaderController uiController;
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -68,6 +67,11 @@ public class SpaceInvaderApp extends GameApplication {
 
     @Override
     protected void onPreInit() {
+        getSettings().setGlobalSoundVolume(0.1);
+        getSettings().setGlobalMusicVolume(0.5);
+
+        loopBGM("bgm.mp3");
+
         onEvent(GameEvent.ENEMY_KILLED,this::onEnemyKilled);
         onEvent(GameEvent.ENEMY_REACHED_END,this::onEnemyReachedEnd);
         onEvent(GameEvent.PLAYER_GOT_HIT,this::onPlayerGotHit);
@@ -211,7 +215,7 @@ public class SpaceInvaderApp extends GameApplication {
     }
 
     private void showGameOver() {
-        getDialogService().showConfirmationBox("Demo Over. Play Again?", yes -> {
+        getDialogService().showConfirmationBox("Game Over. Play Again?", yes -> {
             if (yes) {
                 getGameWorld().getEntitiesCopy().forEach(Entity::removeFromWorld);
                 getGameController().startNewGame();

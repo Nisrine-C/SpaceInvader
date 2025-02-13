@@ -26,7 +26,7 @@ import static com.almasb.fxgl.dsl.FXGLForKtKt.spawn;
 public class EnemyComponent extends Component {
 
     protected LocalTimer attackTimer;
-    protected Duration nextAttack = Duration.seconds(2);
+    protected Duration nextAttack = Duration.seconds(1.75);
 
     private EnemyType subType;
     private final int originalLives;
