@@ -1,55 +1,41 @@
 package fxgl.spaceinvader;
 
-import com.almasb.fxgl.animation.Interpolators;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
-import com.almasb.fxgl.app.MenuItem;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.ui.FontFactory;
 import fxgl.spaceinvader.event.GameEvent;
-import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.entity.component.Component;
-import com.almasb.fxgl.entity.components.CollidableComponent;
-import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
 import com.almasb.fxgl.input.Input;
-import com.almasb.fxgl.input.UserAction;
-import com.almasb.fxgl.texture.Texture;
-import com.almasb.fxgl.ui.UI;
 import fxgl.spaceinvader.collision.BulletEnemyHandler;
 import fxgl.spaceinvader.collision.BulletPlayerHandler;
 import fxgl.spaceinvader.collision.BulletShieldHandler;
 import fxgl.spaceinvader.collision.BulletWallHandler;
 import fxgl.spaceinvader.component.PlayerComponent;
-import fxgl.spaceinvader.event.GameEvent;
 import fxgl.spaceinvader.level.Level1;
-import fxgl.spaceinvader.level.Level2;
 import fxgl.spaceinvader.level.SpaceLevel;
 
+import fxgl.spaceinvader.ui.MySceneFactory;
 import fxgl.spaceinvader.particles.ParticleSystem;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
-import java.io.InputStream;
 import java.util.*;
-import java.util.stream.IntStream;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 import static fxgl.spaceinvader.Config.*;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+
 public class SpaceInvaderApp extends GameApplication {
 
     private ParticleSystem particleSystem;
     private List<SpaceLevel> levels;
 
+
+    List<String> cssList = List.of("fxgl_dark.css","ui.css");
     @Override
     protected void initSettings(GameSettings settings) {
         settings.setTitle("Space Invaders");
@@ -59,10 +45,16 @@ public class SpaceInvaderApp extends GameApplication {
         settings.setProfilingEnabled(false);
         settings.setMainMenuEnabled(true);
         settings.setGameMenuEnabled(true);
+        settings.setSceneFactory(new MySceneFactory());
         settings.setManualResizeEnabled(true);
         settings.setPreserveResizeRatio(true);
         settings.setIntroEnabled(false);
         settings.setApplicationMode(ApplicationMode.RELEASE);
+        settings.setCSSList(cssList);
+        settings.setFontUI("ARCADECLASSIC.TTF");
+        settings.setFontGame("ARCADECLASSIC.TTF");
+        settings.setFontMono("ARCADECLASSIC.TTF");
+        settings.setFontText("ARCADECLASSIC.TTF");
     }
 
     @Override
@@ -121,6 +113,7 @@ public class SpaceInvaderApp extends GameApplication {
 
     @Override
     protected void initUI() {
+        System.out.println(FXGL.getAssetLoader().loadCSS("ui.css"));
         Label scoreLabel = new Label();
         scoreLabel.setFont(getUIFactoryService().newFont(18));
         scoreLabel.setTextFill(Color.WHITE);

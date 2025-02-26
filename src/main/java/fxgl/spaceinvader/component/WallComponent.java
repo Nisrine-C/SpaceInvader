@@ -28,14 +28,7 @@ public class WallComponent extends Component {
     public void onHit() {
         lives--;
 
-        animationBuilder()
-                .autoReverse(true)
-                .repeat(2)
-                .interpolator(Interpolators.CIRCULAR.EASE_IN())
-                .duration(Duration.seconds(0.33))
-                .scale(entity)
-                .to(new Point2D(1.2, 1.2))
-                .buildAndPlay();
+
 
         if (lives == 0) {
             entity.getComponent(CollidableComponent.class).setValue(false);

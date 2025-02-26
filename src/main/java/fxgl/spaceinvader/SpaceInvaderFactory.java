@@ -62,7 +62,7 @@ public class SpaceInvaderFactory implements EntityFactory {
     public Entity newPlayer(SpawnData data){
         return  FXGL.entityBuilder(data)
                 .type(SpaceInvaderType.PLAYER)
-                .viewWithBBox("player.png")
+                .viewWithBBox("ship.png")
                 .with(new InvincibleComponent())
                 .with(new PlayerComponent())
                 .collidable()

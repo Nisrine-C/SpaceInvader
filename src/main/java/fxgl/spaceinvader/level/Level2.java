@@ -29,39 +29,36 @@ public class Level2 extends SpaceLevel{
     }
 
     private static class MoveComponent extends Component {
-
-        private double t = 0;
-        private  double speed;
+        private double movementInterval=100;
+        private double speed;
         private double speedIncreaseRate;
+        private double direction = 1;
+        private double initialX = 0;
 
-        public MoveComponent(double initialSpeed) {
-            this(initialSpeed, 0.5); // Default speed increase rate
-        }
 
         public MoveComponent(double initialSpeed, double speedIncreaseRate) {
             this.speed = initialSpeed;
             this.speedIncreaseRate = speedIncreaseRate;
         }
+
         @Override
         public void onUpdate(double tpf) {
-            t += tpf * speed;
+            if (initialX == 0){
+                initialX = entity.getX();
+            }else {
+                speed += speedIncreaseRate * tpf;
+                double moveX = direction * speed * tpf;
+                entity.translateX(moveX);
 
-            double absoluteSpeed = Math.abs(speed) + speedIncreaseRate * tpf;
-            speed = speed < 0 ? -absoluteSpeed : absoluteSpeed;
+                if (entity.getX() >= initialX + movementInterval || entity.getX() <= initialX - movementInterval) {
+                    direction *= -1;
+                    entity.translateY(32);
+                }
 
-            double newX = entity.getX() + speed * tpf;
-            double newY;
-            entity.setPosition(newX, entity.getY());
-
-            if(entity.getX() + entity.getWidth() / 2 >= Config.WIDTH -25 || entity.getX() - entity.getWidth() / 2 <= 0){
-                speed=-speed;
-                newY = entity.getY() + entity.getHeight() + 16;
-                entity.setPosition( entity.getX(),newY);
-            }
-            if(entity.getY() >= HEIGHT - 284){
-                fire(new GameEvent(GameEvent.ENEMY_REACHED_END));
+                if (entity.getY() >= HEIGHT - 100) {
+                    fire(new GameEvent(GameEvent.ENEMY_REACHED_END));
+                }
             }
         }
-
     }
 }

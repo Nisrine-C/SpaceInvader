@@ -5,9 +5,10 @@ public final class Config {
 
     public static final String SAVE_DATA_NAME = "./hiscore.dat";
 
-    public static final int WIDTH = 512;
-    public static final int HEIGHT = 720;
-
+    public static final int WIDTH = 800;
+    public static final int HEIGHT = 600;
+    //640 x 480
+    //800 x 600
 
     public static final double LEVEL_START_DELAY = 1.5;
 
