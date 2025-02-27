@@ -1,0 +1,19 @@
+@font-face {
+    font-family: "ARACDECLASSIC";
+    src: url("../fonts/ARCADECLASSIC.TTF");
+}
+
+.custom-button {
+    -fx-margin-bottom: 10px;
+    -fx-border-radius:20px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 100% 100%;
+    -fx-height: fit-content;
+    -fx-width: fit-content;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-position: center;
+}
+.custom-button:hover {
+    -fx-background-color: #1e182e;
+}
